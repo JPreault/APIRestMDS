@@ -106,6 +106,58 @@ class ProductController extends AbstractController
         return $this->json(true);
     }
 
+    #[Route('/addStock', name: 'add_product', methods: ['POST'])]
+    public function addStock(ValidatorInterface $validator, ManagerRegistry $doctrine, Request $request): Response
+    {
+        $id = $request->get('id');
+        $product = $doctrine->getRepository(Product::class)->find($id);
+
+        if(!$product) {
+            return $this->json('id not found in database');
+        }
+
+        try {
+            $product->setStock($product->getStock() + $request->get('stock'));
+            if(count($validator->validate($product)) > 0){
+                return $this->json('Error appeared, go read the documentation !');
+            }
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($product);
+            $entityManager->flush();
+        } catch (\Throwable $e) {
+            var_dump($e);
+            return $this->json('Error appeared, go read the documentation !');
+        }
+
+        return $this->json($product);
+    }
+
+    #[Route('/removeStock', name: 'remove_product', methods: ['POST'])]
+    public function removeStock(ValidatorInterface $validator, ManagerRegistry $doctrine, Request $request): Response
+    {
+        $id = $request->get('id');
+        $product = $doctrine->getRepository(Product::class)->find($id);
+
+        if(!$product) {
+            return $this->json('id not found in database');
+        }
+
+        try {
+            $product->setStock($product->getStock() - $request->get('stock'));
+            if(count($validator->validate($product)) > 0){
+                return $this->json('Error appeared, go read the documentation !');
+            }
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($product);
+            $entityManager->flush();
+        } catch (\Throwable $e) {
+            var_dump($e);
+            return $this->json('Error appeared, go read the documentation !');
+        }
+
+        return $this->json($product);
+    }
+
     /*#[Route('/', name: 'app_product')]
     public function index(ManagerRegistry $doctrine): Response
     {
