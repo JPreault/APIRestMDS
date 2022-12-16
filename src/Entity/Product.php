@@ -24,6 +24,9 @@ class Product implements JsonSerializable
     #[ORM\Column]
     private ?int $stock = null;
 
+    #[ORM\Column(length: 13)]
+    private ?string $code = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,12 +56,25 @@ class Product implements JsonSerializable
         return $this;
     }
 
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
     public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'stock' => $this->stock
+            'stock' => $this->stock,
+            'code' => $this->code
         ];
     }
 }
