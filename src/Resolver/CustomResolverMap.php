@@ -30,7 +30,7 @@ class CustomResolverMap extends ResolverMap
                     ResolveInfo $info
                 ) {
                     return match ($info->fieldName) {
-                        'product' => $this->queryService->findProduct((int)$args['id']),
+                        'product' => $args['id'] !== null ? $this->queryService->findProduct((string)$args['id']) : $this->queryService->findProduct((string)$args['code']),
                         'products' => $this->queryService->getAllProducts(),
                         default => null
                     };
@@ -44,7 +44,7 @@ class CustomResolverMap extends ResolverMap
                     ResolveInfo $info
                 ) {
                     return match ($info->fieldName) {
-                        'createAuthor' => $this->mutationService->createProduct($args['product']),
+                        'createProduct' => $this->mutationService->createProduct($args['product']),
                         default => null
                     };
                 },
